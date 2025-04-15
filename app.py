@@ -21,7 +21,7 @@ app.config['MAIL_PASSWORD'] = 'ctrqvcarhcuibgdy'
 mail = Mail(app)
 
 # Set the hardcoded recipient (like in Django's view)
-RECIPIENT_EMAIL = 'mofomi@saconsulting.ai'  # Replace this with your desired inbox
+RECIPIENT_EMAIL = 'RaphaelEzema@SignalAllianceTechnology174.onmicrosoft.com'  
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
