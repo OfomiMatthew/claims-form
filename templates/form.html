@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Insurance Claim Form</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <style>
+    .modal {
+      display: none;
+    }
+    .modal.is-active {
+      display: flex;
+    }
+  </style>
+</head>
+<body>
+<section class="section">
+  <div class="container">
+    <h1 class="title has-text-centered">Insurance Claim Submission</h1>
+
+    <form id="claimForm" method="POST" enctype="multipart/form-data">
+      <div class="field">
+        <label class="label">Full Name</label>
+        <div class="control">
+          <input class="input" type="text" name="full_name" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Email Address</label>
+        <div class="control">
+          <input class="input" type="email" name="email" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Phone Number</label>
+        <div class="control">
+          <input class="input" type="text" name="phone" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Policy Number</label>
+        <div class="control">
+          <input class="input" type="text" name="policy_number" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Claim Type</label>
+        <div class="control">
+          <input class="input" type="text" name="claim_type" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Incident Date</label>
+        <div class="control">
+          <input class="input" type="date" name="incident_date" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Incident Description</label>
+        <div class="control">
+          <textarea class="textarea" name="description" required></textarea>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Claim Amount</label>
+        <div class="control">
+          <input class="input" type="number" name="claim_amount" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Supporting Document</label>
+        <div class="file has-name is-boxed">
+          <label class="file-label">
+            <input class="file-input" type="file" name="document" id="fileInput" required>
+            <span class="file-cta">
+              <span class="file-icon">📎</span>
+              <span class="file-label">Choose a file…</span>
+            </span>
+            <span class="file-name" id="fileName">No file uploaded</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field is-grouped is-grouped-right">
+        <div class="control">
+          <button class="button is-link" type="submit">Submit Claim</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- Modal -->
+<div class="modal {% if show_modal %}is-active{% endif %}" id="successModal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head has-background-success">
+      <p class="modal-card-title has-text-white">Success!</p>
+      <button class="delete" aria-label="close" onclick="closeModal()"></button>
+    </header>
+    <section class="modal-card-body">
+      Your claim has been submitted successfully. We have received your report and will process it shortly.
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button is-success" onclick="closeModal()">OK</button>
+    </footer>
+  </div>
+</div>
+
+<script>
+  function closeModal() {
+    document.getElementById('successModal').classList.remove('is-active');
+  }
+
+  // Handle file name display and form reset
+  document.addEventListener('DOMContentLoaded', () => {
+    const fileInput = document.getElementById('fileInput');
+    const fileName = document.getElementById('fileName');
+
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length > 0) {
+        fileName.textContent = fileInput.files[0].name;
+      } else {
+        fileName.textContent = "No file uploaded";
+      }
+    });
+
+    {% if show_modal %}
+      document.getElementById('claimForm').reset();
+      fileName.textContent = "No file uploaded";
+    {% endif %}
+  });
+</script>
+</body>
+</html>
