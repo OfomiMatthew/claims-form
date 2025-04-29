@@ -289,6 +289,108 @@
     .is-danger.input, .is-danger.textarea, .is-danger.select select {
       border-color: #ff3860;
     }
+
+    .toggle-switch {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .toggle-switch-label {
+      margin-right: 1rem;
+      font-weight: 500;
+    }
+    .toggle-switch-container {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 30px;
+    }
+    .toggle-switch-checkbox {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .toggle-switch-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+    .toggle-switch-slider:before {
+      position: absolute;
+      content: "";
+      height: 22px;
+      width: 22px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    .toggle-switch-checkbox:checked + .toggle-switch-slider {
+      background-color: var(--primary);
+    }
+    .toggle-switch-checkbox:checked + .toggle-switch-slider:before {
+      transform: translateX(30px);
+    }
+    .toggle-switch-text {
+      margin-left: 0.5rem;
+      font-weight: 500;
+    }
+    .claimant-section {
+      display: none;
+    }
+    .claimant-section.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+    .declaration-box {
+      border: 1px solid #e9ecef;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      background-color: #f8f9fa;
+    }
+    .file-list {
+      margin-top: 0.5rem;
+    }
+    .file-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    .file-item .delete {
+      margin-left: 0.5rem;
+    }
+
+    .select {
+      width: 100%;
+    }
+    .select:not(.is-multiple):not(.is-loading)::after {
+      border-color: var(--primary);
+      margin-top: -0.375em;
+      right: 1.125em;
+    }
+    .select select {
+      width: 100%;
+      outline: none;
+      cursor: pointer;
+    }
+    .select select:invalid {
+      color: #6c757d;
+    }
+    .select select option {
+      color: var(--dark);
+    }
+    .select select:focus {
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.15);
+    }
   </style>
 </head>
 <body>
@@ -297,8 +399,6 @@
   <div class="container">
     <div class="form-container">
       <div class="form-header">
-        <i class="fas fa-shield-alt floating-icon icon-1"></i>
-        <i class="fas fa-file-signature floating-icon icon-2"></i>
         <h1 class="title">Submit Insurance Claim</h1>
         <p class="subtitle mt-2">Complete the form below to process your claim quickly</p>
       </div>
@@ -307,55 +407,53 @@
         <div class="form-steps">
           <div class="step completed">
             <span class="step-number">1</span>
-            <span class="step-label">Personal Info</span>
+            <span class="step-label">Policyholder Info</span>
           </div>
-          <div class="step active">
+          <div class="step">
             <span class="step-number">2</span>
-            <span class="step-label">Claim Details</span>
+            <span class="step-label">Claimant Info</span>
           </div>
           <div class="step">
             <span class="step-number">3</span>
-            <span class="step-label">Documents</span>
+            <span class="step-label">Claim Details</span>
           </div>
           <div class="step">
             <span class="step-number">4</span>
+            <span class="step-label">Incident Details</span>
+          </div>
+          <div class="step">
+            <span class="step-number">5</span>
+            <span class="step-label">Loss & Damage</span>
+          </div>
+          <div class="step">
+            <span class="step-number">6</span>
+            <span class="step-label">Bank Details</span>
+          </div>
+          <div class="step">
+            <span class="step-number">7</span>
+            <span class="step-label">Documents</span>
+          </div>
+          <div class="step">
+            <span class="step-number">8</span>
             <span class="step-label">Review</span>
           </div>
         </div>
 
         <div class="progress-bar">
-          <div class="progress-fill" style="width: 50%"></div>
+          <div class="progress-fill" style="width: 12.5%"></div>
         </div>
 
         <form id="claimForm" method="POST" enctype="multipart/form-data">
-          <!-- Section 1: Personal Information -->
+          <!-- Section 1: Policyholder Information -->
           <div class="form-section active">
+            <h4 class="title is-4 mb-4">Policyholder Information</h4>
+            
             <div class="field">
               <label class="field-label">Full Name</label>
               <div class="control has-icons-left">
-                <input class="input" type="text" name="full_name" placeholder="John Bonano" required>
+                <input class="input" type="text" name="policyholder_name" placeholder="John Bonano" required>
                 <span class="icon is-left">
                   <i class="fas fa-user"></i>
-                </span>
-              </div>
-            </div>
-
-            <div class="field">
-              <label class="field-label">Email Address</label>
-              <div class="control has-icons-left">
-                <input class="input" type="email" name="email" placeholder="john@example.com" required>
-                <span class="icon is-left">
-                  <i class="fas fa-envelope"></i>
-                </span>
-              </div>
-            </div>
-
-            <div class="field">
-              <label class="field-label">Phone Number</label>
-              <div class="control has-icons-left">
-                <input class="input" type="tel" name="phone" placeholder="+234 801 234 5678" required>
-                <span class="icon is-left">
-                  <i class="fas fa-phone"></i>
                 </span>
               </div>
             </div>
@@ -370,26 +468,156 @@
               </div>
             </div>
 
+            <div class="field">
+              <label class="field-label">Address</label>
+              <div class="control">
+                <textarea class="textarea" name="policyholder_address" placeholder="Your full address" required></textarea>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label">Phone Number</label>
+              <div class="control has-icons-left">
+                <input class="input" type="tel" name="policyholder_phone" placeholder="+234 801 234 5678" required>
+                <span class="icon is-left">
+                  <i class="fas fa-phone"></i>
+                </span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label">Email Address</label>
+              <div class="control has-icons-left">
+                <input class="input" type="email" name="policyholder_email" placeholder="john@example.com" required>
+                <span class="icon is-left">
+                  <i class="fas fa-envelope"></i>
+                </span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label">Date of Birth</label>
+              <div class="control has-icons-left">
+                <input class="input" type="date" name="policyholder_dob" required>
+                <span class="icon is-left">
+                  <i class="fas fa-calendar-alt"></i>
+                </span>
+              </div>
+            </div>
+
             <div class="form-navigation">
               <button type="button" class="button is-outlined" disabled>Previous</button>
               <button type="button" class="button is-primary next-step">Next</button>
             </div>
           </div>
 
-          <!-- Section 2: Claim Details -->
+          <!-- Section 2: Claimant Information -->
           <div class="form-section">
+            <h4 class="title is-4 mb-4">Claimant Information</h4>
+            
+            <div class="toggle-switch">
+              <span class="toggle-switch-label">Is the claimant different from the policyholder?</span>
+              <label class="toggle-switch-container">
+                <input type="checkbox" id="claimantToggle" name="claimant_different" value="yes">
+                <span class="toggle-switch-slider"></span>
+              </label>
+              <span class="toggle-switch-text" id="toggleText">No</span>
+            </div>
+            
+            <div class="claimant-section" id="claimantSection">
+              <div class="field">
+                <label class="field-label">Full Name</label>
+                <div class="control has-icons-left">
+                  <input class="input" type="text" name="claimant_name" placeholder="Claimant's full name">
+                  <span class="icon is-left">
+                    <i class="fas fa-user"></i>
+                  </span>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="field-label">Relationship to Policyholder</label>
+                <div class="control">
+                  <div class="select is-fullwidth">
+                    <select name="claimant_relationship">
+                      <option value="">Select relationship</option>
+                      <option value="Spouse">Spouse</option>
+                      <option value="Child">Child</option>
+                      <option value="Parent">Parent</option>
+                      <option value="Sibling">Sibling</option>
+                      <option value="Other Relative">Other Relative</option>
+                      <option value="Business Partner">Business Partner</option>
+                      <option value="Employee">Employee</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="field-label">Contact Information</label>
+                <div class="control">
+                  <textarea class="textarea" name="claimant_contact" placeholder="Phone number, email, etc."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-navigation">
+              <button type="button" class="button is-outlined prev-step">Previous</button>
+              <button type="button" class="button is-primary next-step">Next</button>
+            </div>
+          </div>
+
+          <!-- Section 3: Claim Information -->
+          <div class="form-section">
+            <h4 class="title is-4 mb-4">Claim Information</h4>
+            
             <div class="field">
-              <label class="field-label">Claim Type</label>
+              <label class="field-label">Nature of Claim</label>
+              <div class="control">
+                <div class="select is-fullwidth">
+                  <select name="nature_of_claim" id="natureOfClaim" required>
+                    <option value="" disabled selected>Select nature of claim</option>
+                    <option value="Life Insurance">Life Insurance</option>
+                    <option value="Health Insurance">Health Insurance</option>
+                    <option value="Auto Insurance">Auto Insurance</option>
+                    <option value="Homeowners Insurance">Homeowners Insurance</option>
+                    <option value="Renters Insurance">Renters Insurance</option>
+                    <option value="Travel Insurance">Travel Insurance</option>
+                    <option value="Disability Insurance">Disability Insurance</option>
+                    <option value="Business Insurance">Business Insurance</option>
+                    <option value="Pet Insurance">Pet Insurance</option>
+                    <option value="Liability Insurance">Liability Insurance</option>
+                    <option value="Marine Insurance">Marine Insurance</option>
+                    <option value="Credit Insurance">Credit Insurance</option>
+                  </select>
+                </div>
+                <p class="help">Please select the type of insurance claim you're making</p>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label">Incident Type</label>
               <div class="control has-icons-left">
-                <input class="input" type="text" name="claim_type" placeholder="e.g. Accident, Theft, Damage" required>
+                <input class="input" type="text" name="incident_type" placeholder="e.g. Accident, Theft, Illness, Death, Fire" required>
                 <span class="icon is-left">
                   <i class="fas fa-tag"></i>
                 </span>
               </div>
             </div>
 
+            <div class="form-navigation">
+              <button type="button" class="button is-outlined prev-step">Previous</button>
+              <button type="button" class="button is-primary next-step">Next</button>
+            </div>
+          </div>
+
+          <!-- Section 4: Incident Details -->
+          <div class="form-section">
+            <h4 class="title is-4 mb-4">Incident Details</h4>
+            
             <div class="field">
-              <label class="field-label">Incident Date</label>
+              <label class="field-label">Date of Incident</label>
               <div class="control has-icons-left">
                 <input class="input" type="date" name="incident_date" required>
                 <span class="icon is-left">
@@ -399,18 +627,147 @@
             </div>
 
             <div class="field">
-              <label class="field-label">Incident Description</label>
-              <div class="control">
-                <textarea class="textarea" name="description" placeholder="Please describe what happened in detail..." rows="5" required></textarea>
+              <label class="field-label">Time of Incident</label>
+              <div class="control has-icons-left">
+                <input class="input" type="time" name="incident_time" required>
+                <span class="icon is-left">
+                  <i class="fas fa-clock"></i>
+                </span>
               </div>
             </div>
 
             <div class="field">
-              <label class="field-label">Claim Amount (₦)</label>
+              <label class="field-label">Location of Incident</label>
+              <div class="control">
+                <textarea class="textarea" name="incident_location" placeholder="Address or description of location" required></textarea>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label">Description of Incident</label>
+              <div class="control">
+                <textarea class="textarea" name="incident_description" placeholder="Please describe what happened in detail..." rows="5" required></textarea>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label">Cause of Loss/Damage</label>
+              <div class="control">
+                <textarea class="textarea" name="cause_of_loss" placeholder="What caused the loss or damage?" required></textarea>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label">Police Report Number (if applicable)</label>
+              <div class="control">
+                <input class="input" type="text" name="police_report_number" placeholder="Enter police report number if available">
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label">Witness Information (Names and Contact)</label>
+              <div class="control">
+                <textarea class="textarea" name="witness_information" placeholder="Names and contact information of any witnesses"></textarea>
+              </div>
+            </div>
+
+            <div class="form-navigation">
+              <button type="button" class="button is-outlined prev-step">Previous</button>
+              <button type="button" class="button is-primary next-step">Next</button>
+            </div>
+          </div>
+
+          <!-- Section 5: Loss and Damage -->
+          <div class="form-section">
+            <h4 class="title is-4 mb-4">Loss and Damage</h4>
+            
+            <div class="field">
+              <label class="field-label">Description of Items Lost or Damaged</label>
+              <div class="control">
+                <textarea class="textarea" name="loss_description" placeholder="Detailed description of items lost or damaged" required></textarea>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label">Estimated Value or Cost of Loss (₦)</label>
               <div class="control has-icons-left">
-                <input class="input" type="number" name="claim_amount" placeholder="50000" required>
+                <input class="input" type="number" name="estimated_value" placeholder="50000" required>
                 <span class="icon is-left">
                   <i class="fas fa-money-bill-wave"></i>
+                </span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label">Repair Estimates (if applicable)</label>
+              <div class="control">
+                <textarea class="textarea" name="repair_estimates" placeholder="Details of repair estimates if available"></textarea>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label">Medical Diagnosis and Treatment Details (for health claims)</label>
+              <div class="control">
+                <textarea class="textarea" name="medical_details" placeholder="Medical details if applicable"></textarea>
+              </div>
+            </div>
+
+            <div class="form-navigation">
+              <button type="button" class="button is-outlined prev-step">Previous</button>
+              <button type="button" class="button is-primary next-step">Next</button>
+            </div>
+          </div>
+
+          <!-- Section 6: Bank Details -->
+          <div class="form-section">
+            <h4 class="title is-4 mb-4">Bank Details for Payout</h4>
+            
+            <div class="field">
+              <label class="field-label">Account Name</label>
+              <div class="control has-icons-left">
+                <input class="input" type="text" name="account_name" placeholder="Account holder name" required>
+                <span class="icon is-left">
+                  <i class="fas fa-user"></i>
+                </span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label">Bank Name</label>
+              <div class="control has-icons-left">
+                <input class="input" type="text" name="bank_name" placeholder="Bank name" required>
+                <span class="icon is-left">
+                  <i class="fas fa-university"></i>
+                </span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label">Account Number</label>
+              <div class="control has-icons-left">
+                <input class="input" type="text" name="account_number" placeholder="Account number" required>
+                <span class="icon is-left">
+                  <i class="fas fa-credit-card"></i>
+                </span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label">Bank Branch</label>
+              <div class="control has-icons-left">
+                <input class="input" type="text" name="bank_branch" placeholder="Branch location" required>
+                <span class="icon is-left">
+                  <i class="fas fa-map-marker-alt"></i>
+                </span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label">Swift Code (for international payments)</label>
+              <div class="control has-icons-left">
+                <input class="input" type="text" name="swift_code" placeholder="Bank's SWIFT code if applicable">
+                <span class="icon is-left">
+                  <i class="fas fa-globe"></i>
                 </span>
               </div>
             </div>
@@ -421,30 +778,26 @@
             </div>
           </div>
 
-          <!-- Section 3: Documents -->
+          <!-- Section 7: Supporting Documents -->
           <div class="form-section">
+            <h4 class="title is-4 mb-4">Supporting Documents</h4>
+            
             <div class="field">
-              <label class="field-label">Supporting Documents</label>
+              <label class="field-label">Upload Supporting Documents</label>
               <div class="file has-name is-boxed is-fullwidth">
                 <label class="file-label">
-                  <input class="file-input" type="file" name="document" id="fileInput" required>
+                  <input class="file-input" type="file" name="documents" id="fileInput" multiple>
                   <span class="file-cta">
                     <span class="file-icon">
                       <i class="fas fa-cloud-upload-alt"></i>
                     </span>
                     <span class="file-label">Click to upload files</span>
                   </span>
-                  <span class="file-name" id="fileName">No file selected</span>
+                  <span class="file-name" id="fileName">No files selected</span>
                 </label>
               </div>
               <p class="help">Upload photos, police reports, medical documents, etc. (PDF, JPG, PNG, DOC)</p>
-            </div>
-
-            <div class="field">
-              <label class="checkbox">
-                <input type="checkbox" name="terms" required>
-                I certify that the information provided is accurate to the best of my knowledge
-              </label>
+              <div id="fileList" class="file-list"></div>
             </div>
 
             <div class="form-navigation">
@@ -453,8 +806,30 @@
             </div>
           </div>
 
-          <!-- Section 4: Review -->
+          <!-- Section 8: Declaration and Review -->
           <div class="form-section">
+            <h4 class="title is-4 mb-4">Declaration and Review</h4>
+            
+            <div class="declaration-box">
+              <h5 class="title is-5">Declaration and Consent</h5>
+              <div class="content">
+                <p>By submitting this claim form, I declare that:</p>
+                <ol>
+                  <li>The information provided in this form is true and accurate to the best of my knowledge.</li>
+                  <li>I understand that providing false or misleading information may result in the rejection of my claim or legal consequences.</li>
+                  <li>I authorize the insurance company to verify any information provided in this claim.</li>
+                  <li>I consent to the processing of my personal data for the purposes of this claim.</li>
+                </ol>
+              </div>
+              
+              <div class="field">
+                <label class="checkbox">
+                  <input type="checkbox" name="declaration" required>
+                  I agree to the above declaration and consent terms
+                </label>
+              </div>
+            </div>
+
             <div class="notification is-light">
               <p class="has-text-centered"><i class="fas fa-check-circle has-text-success"></i> Please review your information before submitting</p>
             </div>
@@ -463,25 +838,41 @@
               <h5 class="title is-5">Claim Summary</h5>
               <div class="box">
                 <div class="columns is-multiline">
+                  <!-- Policyholder Information -->
                   <div class="column is-half">
-                    <p><strong>Name:</strong> <span id="review-name"></span></p>
+                    <h6 class="title is-6">Policyholder Information</h6>
+                    <p><strong>Full Name:</strong> <span id="review-policyholder-name"></span></p>
+                    <p><strong>Policy Number:</strong> <span id="review-policy-number"></span></p>
                     <p><strong>Email:</strong> <span id="review-email"></span></p>
-                  </div>
-                  <div class="column is-half">
                     <p><strong>Phone:</strong> <span id="review-phone"></span></p>
-                    <p><strong>Policy #:</strong> <span id="review-policy"></span></p>
+                    <p><strong>Address:</strong> <span id="review-address"></span></p>
+                    <p><strong>Date of Birth:</strong> <span id="review-dob"></span></p>
                   </div>
+                  
+                  <!-- Claim Information -->
                   <div class="column is-half">
-                    <p><strong>Claim Type:</strong> <span id="review-type"></span></p>
+                    <h6 class="title is-6">Claim Information</h6>
+                    <p><strong>Nature of Claim:</strong> <span id="review-nature"></span></p>
+                    <p><strong>Incident Type:</strong> <span id="review-type"></span></p>
                     <p><strong>Incident Date:</strong> <span id="review-date"></span></p>
+                    <p><strong>Incident Time:</strong> <span id="review-time"></span></p>
+                    <p><strong>Location:</strong> <span id="review-location"></span></p>
+                    <p><strong>Estimated Value:</strong> <span id="review-value"></span></p>
                   </div>
+                  
+                  <!-- Additional Information -->
                   <div class="column is-half">
-                    <p><strong>Claim Amount:</strong> <span id="review-amount"></span></p>
-                    <p><strong>Documents:</strong> <span id="review-docs">No file selected</span></p>
+                    <h6 class="title is-6">Additional Information</h6>
+                    <p><strong>Police Report:</strong> <span id="review-police-report"></span></p>
+                    <p><strong>Bank Name:</strong> <span id="review-bank-name"></span></p>
+                    <p><strong>Account Name:</strong> <span id="review-account-name"></span></p>
+                    <p><strong>Account Number:</strong> <span id="review-account-number"></span></p>
                   </div>
-                  <div class="column is-full">
-                    <p><strong>Description:</strong></p>
-                    <p id="review-description"></p>
+                  
+                  <!-- Documents -->
+                  <div class="column is-half">
+                    <h6 class="title is-6">Supporting Documents</h6>
+                    <div id="review-docs"></div>
                   </div>
                 </div>
               </div>
@@ -512,6 +903,7 @@
           <i class="fas fa-check-circle fa-3x"></i>
         </span>
         <p>Your claim has been received and is being processed.</p>
+        <p class="mt-2">A confirmation email has been sent to <strong id="modal-email"></strong></p>
       </div>
     </section>
     <footer class="modal-card-foot is-justify-content-center">
@@ -521,22 +913,83 @@
 </div>
 
 <script>
+  // Global variable to track current step
+  let currentStep = 1;
+
   document.addEventListener('DOMContentLoaded', () => {
+    // Check if modal should be shown on page load
+    const modal = document.getElementById('successModal');
+    if (modal.classList.contains('is-active')) {
+      // Set the email in the modal
+      document.getElementById('modal-email').textContent = document.querySelector('input[name="policyholder_email"]').value;
+    }
+
+    // Toggle for claimant section
+    const claimantToggle = document.getElementById('claimantToggle');
+    const toggleText = document.getElementById('toggleText');
+    const claimantSection = document.getElementById('claimantSection');
+    
+    claimantToggle.addEventListener('change', function() {
+      if (this.checked) {
+        toggleText.textContent = 'Yes';
+        claimantSection.classList.add('active');
+      } else {
+        toggleText.textContent = 'No';
+        claimantSection.classList.remove('active');
+      }
+    });
+
+    // Multiple file upload handling
+    const fileInput = document.getElementById('fileInput');
+    const fileName = document.getElementById('fileName');
+    const fileList = document.getElementById('fileList');
+    
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length > 0) {
+        if (fileInput.files.length === 1) {
+          fileName.textContent = fileInput.files[0].name;
+        } else {
+          fileName.textContent = `${fileInput.files.length} files selected`;
+        }
+        
+        fileList.innerHTML = '';
+        Array.from(fileInput.files).forEach((file, index) => {
+          const fileItem = document.createElement('div');
+          fileItem.className = 'file-item';
+          fileItem.innerHTML = `
+            <span>${file.name}</span>
+            <button class="delete is-small" data-index="${index}"></button>
+          `;
+          fileList.appendChild(fileItem);
+        });
+      } else {
+        fileName.textContent = 'No files selected';
+        fileList.innerHTML = '';
+      }
+    });
+    
+    // Handle file removal from list
+    fileList.addEventListener('click', (e) => {
+      if (e.target.classList.contains('delete')) {
+        const index = parseInt(e.target.getAttribute('data-index'));
+        const files = Array.from(fileInput.files);
+        files.splice(index, 1);
+        
+        const dataTransfer = new DataTransfer();
+        files.forEach(file => dataTransfer.items.add(file));
+        fileInput.files = dataTransfer.files;
+        
+        const event = new Event('change');
+        fileInput.dispatchEvent(event);
+      }
+    });
+
     // Form steps functionality
     const formSections = document.querySelectorAll('.form-section');
     const steps = document.querySelectorAll('.step');
     const prevBtns = document.querySelectorAll('.prev-step');
     const nextBtns = document.querySelectorAll('.next-step');
     const progressFill = document.querySelector('.progress-fill');
-    let currentStep = 1;
-
-    // File upload display
-    const fileInput = document.getElementById('fileInput');
-    const fileName = document.getElementById('fileName');
-
-    fileInput.addEventListener('change', () => {
-      fileName.textContent = fileInput.files.length > 0 ? fileInput.files[0].name : "No file selected";
-    });
 
     // Initialize form
     showStep(currentStep);
@@ -559,90 +1012,6 @@
       });
     });
 
-    // Show current step
-    function showStep(step) {
-      // Hide all sections
-      formSections.forEach(section => {
-        section.classList.remove('active');
-      });
-
-      // Show current section
-      formSections[step - 1].classList.add('active');
-
-      // Update progress bar
-      progressFill.style.width = `${((step - 1) / (formSections.length - 1)) * 100}%`;
-
-      // Update step indicators
-      steps.forEach((stepEl, index) => {
-        if (index < step - 1) {
-          stepEl.classList.add('completed');
-          stepEl.classList.remove('active');
-        } else {
-          stepEl.classList.remove('completed');
-        }
-      });
-
-      steps[step - 1].classList.add('active');
-    }
-
-    // Validate current step
-    function validateStep(step) {
-      const currentSection = formSections[step - 1];
-      const inputs = currentSection.querySelectorAll('input[required], textarea[required], select[required], [type="checkbox"][required]');
-      
-      let isValid = true;
-      
-      inputs.forEach(input => {
-        if (!input.value.trim() || (input.type === 'checkbox' && !input.checked)) {
-          isValid = false;
-          input.classList.add('is-danger');
-          
-          // Add error message
-          const errorMsg = document.createElement('p');
-          errorMsg.className = 'help is-danger';
-          errorMsg.textContent = 'This field is required';
-          
-          if (input.type === 'checkbox') {
-            input.parentNode.appendChild(errorMsg);
-          } else {
-            input.parentNode.parentNode.appendChild(errorMsg);
-          }
-        } else {
-          input.classList.remove('is-danger');
-          const errorMsg = input.parentNode.querySelector('.help.is-danger') || 
-                          input.parentNode.parentNode.querySelector('.help.is-danger');
-          if (errorMsg) {
-            errorMsg.remove();
-          }
-        }
-      });
-
-      if (!isValid) {
-        currentSection.querySelector('.is-danger').focus();
-      }
-
-      // Update review section when moving to last step
-      if (isValid && step === formSections.length - 1) {
-        updateReviewSection();
-      }
-
-      return isValid;
-    }
-
-    // Update review section with form data
-    function updateReviewSection() {
-      const form = document.getElementById('claimForm');
-      document.getElementById('review-name').textContent = form.full_name.value;
-      document.getElementById('review-email').textContent = form.email.value;
-      document.getElementById('review-phone').textContent = form.phone.value;
-      document.getElementById('review-policy').textContent = form.policy_number.value;
-      document.getElementById('review-type').textContent = form.claim_type.value;
-      document.getElementById('review-date').textContent = form.incident_date.value;
-      document.getElementById('review-amount').textContent = '₦' + Number(form.claim_amount.value).toLocaleString();
-      document.getElementById('review-description').textContent = form.description.value;
-      document.getElementById('review-docs').textContent = fileInput.files.length > 0 ? fileInput.files[0].name : "No file selected";
-    }
-
     // Form submission
     document.getElementById('claimForm').addEventListener('submit', function(e) {
       // Final validation
@@ -651,26 +1020,173 @@
         return;
       }
       
-      // Form will submit normally to your Flask endpoint
+      // Show loading state on submit button
+      const submitBtn = this.querySelector('button[type="submit"]');
+      submitBtn.classList.add('is-loading');
+      submitBtn.disabled = true;
     });
   });
 
-  function closeModal() {
-    document.getElementById('successModal').classList.remove('is-active');
-    // Reset form and return to first step
-    document.getElementById('claimForm').reset();
-    document.getElementById('fileName').textContent = "No file selected";
-    document.querySelectorAll('.form-section').forEach((section, index) => {
+  // Show current step
+  function showStep(step) {
+    const formSections = document.querySelectorAll('.form-section');
+    const steps = document.querySelectorAll('.step');
+    const progressFill = document.querySelector('.progress-fill');
+
+    // Hide all sections
+    formSections.forEach(section => {
       section.classList.remove('active');
-      if (index === 0) section.classList.add('active');
     });
-    document.querySelectorAll('.step').forEach((step, index) => {
-      step.classList.remove('active', 'completed');
-      if (index === 0) step.classList.add('completed');
-      if (index === 1) step.classList.add('active');
+
+    // Show current section
+    formSections[step - 1].classList.add('active');
+
+    // Update progress bar
+    const progressPercentage = ((step - 1) / (formSections.length - 1)) * 100;
+    progressFill.style.width = `${progressPercentage}%`;
+
+    // Update step indicators
+    steps.forEach((stepEl, index) => {
+      if (index < step - 1) {
+        stepEl.classList.add('completed');
+        stepEl.classList.remove('active');
+      } else {
+        stepEl.classList.remove('completed');
+      }
     });
-    document.querySelector('.progress-fill').style.width = '0%';
+
+    steps[step - 1].classList.add('active');
+    
+    // Update review section if we're on the review step
+    if (step === formSections.length) {
+      updateReviewSection();
+    }
+    
+    // Scroll to top of form
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Validate current step
+  function validateStep(step) {
+    const currentSection = document.querySelectorAll('.form-section')[step - 1];
+    const inputs = currentSection.querySelectorAll('input[required], textarea[required], select[required], [type="checkbox"][required]');
+    
+    let isValid = true;
+    
+    inputs.forEach(input => {
+      if ((!input.value.trim() && input.tagName !== 'SELECT') || 
+          (input.type === 'checkbox' && !input.checked) ||
+          (input.tagName === 'SELECT' && !input.value)) {
+        isValid = false;
+        input.classList.add('is-danger');
+        
+        const errorMsg = document.createElement('p');
+        errorMsg.className = 'help is-danger';
+        errorMsg.textContent = 'This field is required';
+        
+        if (input.type === 'checkbox') {
+          input.parentNode.appendChild(errorMsg);
+        } else {
+          if (input.tagName === 'SELECT') {
+            input.parentNode.parentNode.appendChild(errorMsg);
+          } else {
+            input.parentNode.appendChild(errorMsg);
+          }
+        }
+      } else {
+        input.classList.remove('is-danger');
+        let errorMsg;
+        if (input.tagName === 'SELECT') {
+          errorMsg = input.parentNode.parentNode.querySelector('.help.is-danger');
+        } else if (input.type === 'checkbox') {
+          errorMsg = input.parentNode.querySelector('.help.is-danger');
+        } else {
+          errorMsg = input.parentNode.querySelector('.help.is-danger');
+        }
+        if (errorMsg) {
+          errorMsg.remove();
+        }
+      }
+    });
+
+    if (!isValid) {
+      const firstInvalid = currentSection.querySelector('.is-danger');
+      if (firstInvalid) {
+        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        firstInvalid.focus();
+      }
+    }
+
+    return isValid;
+  }
+
+  // Update review section with form data
+  function updateReviewSection() {
+    const form = document.getElementById('claimForm');
+    const fileInput = document.getElementById('fileInput');
+    
+    // Policyholder Information
+    document.getElementById('review-policyholder-name').textContent = form.policyholder_name.value;
+    document.getElementById('review-policy-number').textContent = form.policy_number.value;
+    document.getElementById('review-email').textContent = form.policyholder_email.value;
+    document.getElementById('review-phone').textContent = form.policyholder_phone.value;
+    document.getElementById('review-address').textContent = form.policyholder_address.value;
+    document.getElementById('review-dob').textContent = form.policyholder_dob.value;
+    
+    // Claim Information
+    document.getElementById('review-nature').textContent = form.nature_of_claim.value;
+    document.getElementById('review-type').textContent = form.incident_type.value;
+    
+    // Incident Details
+    document.getElementById('review-date').textContent = form.incident_date.value;
+    document.getElementById('review-time').textContent = form.incident_time.value;
+    document.getElementById('review-location').textContent = form.incident_location.value;
+    
+    // Loss and Damage
+    document.getElementById('review-value').textContent = '₦' + Number(form.estimated_value.value).toLocaleString();
+    
+    // Additional Information
+    document.getElementById('review-police-report').textContent = form.police_report_number.value || 'N/A';
+    document.getElementById('review-bank-name').textContent = form.bank_name.value;
+    document.getElementById('review-account-name').textContent = form.account_name.value;
+    document.getElementById('review-account-number').textContent = form.account_number.value;
+    
+    // Update documents list
+    const docsContainer = document.getElementById('review-docs');
+    docsContainer.innerHTML = '';
+    if (fileInput.files.length > 0) {
+      const list = document.createElement('ul');
+      Array.from(fileInput.files).forEach(file => {
+        const item = document.createElement('li');
+        item.textContent = file.name;
+        list.appendChild(item);
+      });
+      docsContainer.appendChild(list);
+    } else {
+      docsContainer.textContent = 'No documents uploaded';
+    }
+  }
+
+  function closeModal() {
+    const modal = document.getElementById('successModal');
+    modal.classList.remove('is-active');
+    
+    // Reset form
+    const form = document.getElementById('claimForm');
+    form.reset();
+    
+    // Reset file inputs
+    document.getElementById('fileName').textContent = "No files selected";
+    document.getElementById('fileList').innerHTML = '';
+    
+    // Reset toggle
+    document.getElementById('toggleText').textContent = 'No';
+    document.getElementById('claimantSection').classList.remove('active');
+    document.getElementById('claimantToggle').checked = false;
+    
+    // Reset steps
     currentStep = 1;
+    showStep(currentStep);
   }
 </script>
 </body>
