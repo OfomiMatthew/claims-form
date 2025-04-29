@@ -32,11 +32,44 @@ def generate_html_table(data):
     <html>
         <head>
             <style>
-                body { font-family: Arial, sans-serif; }
-                table { border-collapse: collapse; width: 100%; margin: 20px 0; }
-                th, td { border: 1px solid #dddddd; text-align: left; padding: 8px; }
-                th { background-color: #f2f2f2; }
-                .section-header { background-color: #e6e6e6; font-weight: bold; }
+                body { 
+                    font-family: Arial, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                }
+                .claim-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 20px 0;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                }
+                .claim-table th {
+                    background-color: #4361ee;
+                    color: white;
+                    text-align: left;
+                    padding: 12px;
+                    border: 1px solid #ddd;
+                }
+                .claim-table td {
+                    padding: 12px;
+                    border: 1px solid #ddd;
+                }
+                .claim-table tr:nth-child(even) {
+                    background-color: #f8f9fa;
+                }
+                .claim-table tr:hover {
+                    background-color: #f1f1f1;
+                }
+                .section-header {
+                    background-color: #3a0ca3 !important;
+                    color: white !important;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                }
+                h2 {
+                    color: #4361ee;
+                    margin-bottom: 20px;
+                }
             </style>
         </head>
         <body>
@@ -50,83 +83,86 @@ def generate_html_table(data):
         'witness_information': data.get('witness_information', 'N/A'),
         'repair_estimates': data.get('repair_estimates', 'N/A'),
         'medical_details': data.get('medical_details', 'N/A'),
-        'swift_code': data.get('swift_code', 'N/A')
+        'swift_code': data.get('swift_code', 'N/A'),
+        'claimant_name': data.get('claimant_name', 'N/A'),
+        'claimant_relationship': data.get('claimant_relationship', 'N/A'),
+        'claimant_contact': data.get('claimant_contact', 'N/A')
     }
 
     # Policyholder Information
     html += """
-            <table>
+            <table class="claim-table">
                 <tr><th colspan="2" class="section-header">Policyholder Information</th></tr>
-                <tr><td>Full Name</td><td>{policyholder_name}</td></tr>
-                <tr><td>Policy Number</td><td>{policy_number}</td></tr>
-                <tr><td>Address</td><td>{policyholder_address}</td></tr>
-                <tr><td>Phone Number</td><td>{policyholder_phone}</td></tr>
-                <tr><td>Email Address</td><td>{policyholder_email}</td></tr>
-                <tr><td>Date of Birth</td><td>{policyholder_dob}</td></tr>
+                <tr><td><strong>Full Name</strong></td><td>{policyholder_name}</td></tr>
+                <tr><td><strong>Policy Number</strong></td><td>{policy_number}</td></tr>
+                <tr><td><strong>Address</strong></td><td>{policyholder_address}</td></tr>
+                <tr><td><strong>Phone Number</strong></td><td>{policyholder_phone}</td></tr>
+                <tr><td><strong>Email Address</strong></td><td>{policyholder_email}</td></tr>
+                <tr><td><strong>Date of Birth</strong></td><td>{policyholder_dob}</td></tr>
             </table>
     """.format(**formatted_data)
     
     # Claimant Information (if different)
     if data['claimant_different'] == 'yes':
         html += """
-            <table>
+            <table class="claim-table">
                 <tr><th colspan="2" class="section-header">Claimant Information</th></tr>
-                <tr><td>Full Name</td><td>{claimant_name}</td></tr>
-                <tr><td>Relationship to Policyholder</td><td>{claimant_relationship}</td></tr>
-                <tr><td>Contact Information</td><td>{claimant_contact}</td></tr>
+                <tr><td><strong>Full Name</strong></td><td>{claimant_name}</td></tr>
+                <tr><td><strong>Relationship to Policyholder</strong></td><td>{claimant_relationship}</td></tr>
+                <tr><td><strong>Contact Information</strong></td><td>{claimant_contact}</td></tr>
             </table>
         """.format(**formatted_data)
     
     # Claim Information
     html += """
-            <table>
+            <table class="claim-table">
                 <tr><th colspan="2" class="section-header">Claim Information</th></tr>
-                <tr><td>Nature of Claim</td><td>{nature_of_claim}</td></tr>
-                <tr><td>Incident Type</td><td>{incident_type}</td></tr>
+                <tr><td><strong>Nature of Claim</strong></td><td>{nature_of_claim}</td></tr>
+                <tr><td><strong>Incident Type</strong></td><td>{incident_type}</td></tr>
             </table>
     """.format(**formatted_data)
     
     # Incident Details
     html += """
-            <table>
+            <table class="claim-table">
                 <tr><th colspan="2" class="section-header">Incident Details</th></tr>
-                <tr><td>Date of Incident</td><td>{incident_date}</td></tr>
-                <tr><td>Time of Incident</td><td>{incident_time}</td></tr>
-                <tr><td>Location of Incident</td><td>{incident_location}</td></tr>
-                <tr><td>Description of Incident</td><td>{incident_description}</td></tr>
-                <tr><td>Cause of Loss/Damage</td><td>{cause_of_loss}</td></tr>
-                <tr><td>Police Report Number</td><td>{police_report_number}</td></tr>
-                <tr><td>Witness Information</td><td>{witness_information}</td></tr>
+                <tr><td><strong>Date of Incident</strong></td><td>{incident_date}</td></tr>
+                <tr><td><strong>Time of Incident</strong></td><td>{incident_time}</td></tr>
+                <tr><td><strong>Location of Incident</strong></td><td>{incident_location}</td></tr>
+                <tr><td><strong>Description of Incident</strong></td><td>{incident_description}</td></tr>
+                <tr><td><strong>Cause of Loss/Damage</strong></td><td>{cause_of_loss}</td></tr>
+                <tr><td><strong>Police Report Number</strong></td><td>{police_report_number}</td></tr>
+                <tr><td><strong>Witness Information</strong></td><td>{witness_information}</td></tr>
             </table>
     """.format(**formatted_data)
     
     # Loss and Damage
     html += """
-            <table>
+            <table class="claim-table">
                 <tr><th colspan="2" class="section-header">Loss and Damage</th></tr>
-                <tr><td>Description of Items</td><td>{loss_description}</td></tr>
-                <tr><td>Estimated Value</td><td>{estimated_value}</td></tr>
-                <tr><td>Repair Estimates</td><td>{repair_estimates}</td></tr>
-                <tr><td>Medical Details</td><td>{medical_details}</td></tr>
+                <tr><td><strong>Description of Items</strong></td><td>{loss_description}</td></tr>
+                <tr><td><strong>Estimated Value</strong></td><td>{estimated_value}</td></tr>
+                <tr><td><strong>Repair Estimates</strong></td><td>{repair_estimates}</td></tr>
+                <tr><td><strong>Medical Details</strong></td><td>{medical_details}</td></tr>
             </table>
     """.format(**formatted_data)
     
     # Bank Details
     html += """
-            <table>
+            <table class="claim-table">
                 <tr><th colspan="2" class="section-header">Bank Details for Payout</th></tr>
-                <tr><td>Account Name</td><td>{account_name}</td></tr>
-                <tr><td>Bank Name</td><td>{bank_name}</td></tr>
-                <tr><td>Account Number</td><td>{account_number}</td></tr>
-                <tr><td>Bank Branch</td><td>{bank_branch}</td></tr>
-                <tr><td>Swift Code</td><td>{swift_code}</td></tr>
+                <tr><td><strong>Account Name</strong></td><td>{account_name}</td></tr>
+                <tr><td><strong>Bank Name</strong></td><td>{bank_name}</td></tr>
+                <tr><td><strong>Account Number</strong></td><td>{account_number}</td></tr>
+                <tr><td><strong>Bank Branch</strong></td><td>{bank_branch}</td></tr>
+                <tr><td><strong>Swift Code</strong></td><td>{swift_code}</td></tr>
             </table>
     """.format(**formatted_data)
     
     # Supporting Documents
     if data['filenames']:
         html += """
-            <table>
+            <table class="claim-table">
                 <tr><th class="section-header">Supporting Documents</th></tr>
         """
         for filename in data['filenames']:
