@@ -23,7 +23,8 @@ mail = Mail(app)
 
 # Set the hardcoded recipient
 # 'RaphaelEzema@SignalAllianceTechnology174.onmicrosoft.com' 
-RECIPIENT_EMAIL = 'rezema@saconsulting.ai'
+# 'rezema@saconsulting.ai'
+RECIPIENT_EMAIL = 'ofomimatthew7@gmail.com'
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
