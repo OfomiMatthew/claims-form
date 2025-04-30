@@ -391,6 +391,9 @@
       border-color: var(--primary-light);
       box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.15);
     }
+
+    
+
   </style>
 </head>
 <body>
@@ -518,7 +521,7 @@
             <div class="toggle-switch">
               <span class="toggle-switch-label">Is the claimant different from the policyholder?</span>
               <label class="toggle-switch-container">
-                <input type="checkbox" id="claimantToggle" name="claimant_different" value="yes">
+                <input type="checkbox" id="claimantToggle" name="claimant_different" value="yes" style="display: none;">
                 <span class="toggle-switch-slider"></span>
               </label>
               <span class="toggle-switch-text" id="toggleText">No</span>
@@ -538,8 +541,8 @@
               <div class="field">
                 <label class="field-label">Relationship to Policyholder</label>
                 <div class="control">
-                  <div class="select is-fullwidth">
-                    <select name="claimant_relationship">
+                  <div class="is-fullwidth">
+                    <select name="claimant_relationship" style="color: #333;width: 100%; border-radius: 8px; height: 38px; border: 1px solid grey; padding: 0 12px; font-size: 14px; box-shadow: 0 1px 2px rgba(200, 235, 255, 0.3); transition: border-color 0.2s ease;" >
                       <option value="">Select relationship</option>
                       <option value="Spouse">Spouse</option>
                       <option value="Child">Child</option>
@@ -575,8 +578,8 @@
             <div class="field">
               <label class="field-label">Nature of Claim</label>
               <div class="control">
-                <div class="select is-fullwidth">
-                  <select style="color:black;" name="nature_of_claim" id="natureOfClaim" required placeholder="Select nature of claim">
+                <div class="is-fullwidth">
+                  <select style="color: #333;width: 100%; border-radius: 8px; height: 38px; border: 1px solid grey; padding: 0 12px; font-size: 14px; box-shadow: 0 1px 2px rgba(200, 235, 255, 0.3); transition: border-color 0.2s ease;" name="nature_of_claim" id="natureOfClaim" required placeholder="Select nature of claim">
                     <option value="" disabled selected>Select nature of claim</option>
                     <option value="Life Insurance">Life Insurance</option>
                     <option value="Health Insurance">Health Insurance</option>
@@ -1188,6 +1191,12 @@
     currentStep = 1;
     showStep(currentStep);
   }
+
+
+
+
+ 
+
 </script>
 </body>
 </html>
