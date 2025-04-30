@@ -22,7 +22,8 @@ app.config['MAIL_PASSWORD'] = 'ctrqvcarhcuibgdy'
 mail = Mail(app)
 
 # Set the hardcoded recipient
-RECIPIENT_EMAIL = 'RaphaelEzema@SignalAllianceTechnology174.onmicrosoft.com'  
+# 'RaphaelEzema@SignalAllianceTechnology174.onmicrosoft.com' 
+RECIPIENT_EMAIL = 'mofomi@saconsulting.ai'
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
