@@ -271,7 +271,7 @@ def submit_claim():
             # Send email with HTML table
             msg = Message('New Insurance Claim Submission',
                          sender=app.config['MAIL_USERNAME'],
-                         recipients=[RECIPIENT_EMAIL])
+                         recipients=RECIPIENT_EMAIL)
             
             msg.html = generate_html_table(data)
             
